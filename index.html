@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NullMap Control Panel</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: #d1d5db;
+            padding: 1rem;}
+        .max-w-5xl { max-width: 64rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .mb-8 { margin-bottom: 2rem; }
+        .text-center { text-align: center; }
+        .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+        .font-bold { font-weight: 700; }
+        .text-white { color: #ffffff; }
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-500 { color: #6b7280; }
+        .text-gray-200 { color: #e5e7eb; }
+        .text-gray-300 { color: #d1d5db; }
+        .bg-gray-700\/50 { background-color: rgba(55, 65, 81, 0.5); }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .gap-6 { gap: 1.5rem; }
+        .gap-x-6 { column-gap: 1.5rem; }
+        .gap-y-4 { row-gap: 1rem; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-end { justify-content: flex-end; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .space-x-2 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.5rem; }
+        .space-x-3 > :not([hidden]) ~ :not([hidden]) { margin-left: 0.75rem; }
+        .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-left: 1rem; }
+        .space-y-2 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.5rem; }
+        .space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.75rem; }
+        .space-y-4 > :not([hidden]) ~ :not([hidden]) { margin-top: 1rem; }
+        .w-full { width: 100%; }
+        .w-1\/3 { width: 33.333333%; }
+        .w-1\/4 { width: 25%; }
+        .w-2\/5 { width: 40%; }
+        .w-1\/2 { width: 50%; }
+        .h-4 { height: 1rem; }
+        .w-4 { width: 1rem; }
+        .h-32 { height: 8rem; }
+        .p-1 { padding: 0.25rem; }
+        .p-2 { padding: 0.5rem; }
+        .p-3 { padding: 0.75rem; }
+        .py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .px-1 { padding-left: 0.25rem; padding-right: 0.25rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 0.75rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mb-0 { margin-bottom: 0; }
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .ml-1 { margin-left: 0.25rem; }
+        .text-xs { font-size: 0.75rem; line-height: 1rem; }
+        .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+        .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+        .font-medium { font-weight: 500; }
+        .text-yellow-400 { color: #facc15; }
+        .bg-yellow-400 { background-color: #facc15; }
+        .text-green-400 { color: #4ade80; }
+        .bg-green-400 { background-color: #4ade80; }
+        .text-blue-500 { color: #3b82f6; }
+        .border-blue-500 { border-color: #3b82f6; }
+        .text-cyan-400 { color: #22d3ee; }
+        .text-purple-400 { color: #c084fc; }
+        .text-red-400 { color: #f87171; }
+        .rounded-full { border-radius: 9999px; }
+        .rounded-md { border-radius: 0.375rem; }
+        .border-b { border-bottom-width: 1px; }
+        .border-b-2 { border-bottom-width: 2px; }
+        .border-gray-700 { border-color: #374151; }
+        .border-transparent { border-color: transparent; }
+        .hover\:text-gray-200:hover { color: #e5e7eb; }
+        .hover\:border-gray-500:hover { border-color: #6b7280; }
+        .hidden { display: none; }
+        .inline-block { display: inline-block; }
+        .whitespace-nowrap { white-space: nowrap; }
+        .overflow-x-auto { overflow-x: auto; }
+        .overflow-y-auto { overflow-y: auto; }
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }}
+        @media (min-width: 640px) {
+            .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .sm\:col-span-1 { grid-column: span 1 / span 1; }
+            .sm\:col-span-2 { grid-column: span 2 / span 2; }
+            .sm\:w-auto { width: auto; }
+            .sm\:flex-row { flex-direction: row; }
+            .sm\:space-x-8 > :not([hidden]) ~ :not([hidden]) { margin-left: 2rem; }}
+        @media (min-width: 768px) {
+            .md\:p-8 { padding: 2rem; }
+            .md\:col-span-1 { grid-column: span 1 / span 1; }
+            .md\:col-span-2 { grid-column: span 2 / span 2; }
+            .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }}
+        .card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);}
+        #advancedSettingsCard.card {
+            padding: 1rem;}
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f3f4f6;
+            margin-bottom: 1rem;}
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #9ca3af;
+            margin-bottom: 0.5rem;}
+        .input, .select {
+            width: 100%;
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            color: #f3f4f6;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;}
+        .input-sm {
+            padding: 0.375rem 0.625rem;
+            font-size: 0.75rem;}
+        .select-sm {
+            padding: 0.375rem 0.625rem;
+            font-size: 0.75rem;}
+        .input:focus, .select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);}
+        .button {
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            white-space: nowrap;}
+        #toggleAdvancedSettingsButton.button {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            font-size: 0.75rem;}
+        .button-primary {
+            background-color: #2563eb;
+            color: white;}
+        .button-primary:hover {
+            background-color: #1d4ed8;}
+        .button-secondary {
+            background-color: #4b5563;
+            color: white;}
+        .button-secondary:hover {
+            background-color: #374151;}
+        .button-success {
+            background-color: #16a34a;
+            color: white;}
+        .button-success:hover {
+            background-color: #15803d;}
+        .button-danger {
+            background-color: #dc2626;
+            color: white;}
+        .button-danger:hover {
+            background-color: #b91c1c;}
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 3.5rem;
+            height: 2rem;}
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #4b5563;
+            transition: .4s;
+            border-radius: 2rem;}
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 1.5rem;
+            width: 1.5rem;
+            left: 0.25rem;
+            bottom: 0.25rem;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;}
+        input:checked + .slider {
+            background-color: #2563eb;}
+        input:checked + .slider:before {
+            transform: translateX(1.5rem);}
+        .log-area {
+            background-color: #0f172a;
+            border: 1px solid #374151;
+            color: #94a3b8;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.875rem;
+            transition: height 0.3s ease-in-out;}
+        .tooltip {
+            position: relative;
+            display: inline-block;}
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #374151;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;}
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;}
+        .info-icon {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            background-color: #6b7280;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 0.75rem;
+            line-height: 1rem;
+            cursor: help;
+            margin-left: 0.25rem;}
+        .service-rule-list {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #374151;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            background-color: #1f2937;}
+        .service-rule-list-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            border-radius: 0.25rem;
+            transition: background-color 0.2s;}
+        .service-rule-list-item:hover {
+            background-color: #374151;}
+        .configured-services-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px; }
+        #collapsibleAdvancedSettingsContent {
+            transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            overflow: hidden;
+            max-height: 2000px;
+            opacity: 1;}
+        #collapsibleAdvancedSettingsContent.hidden {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-bottom: 0;}
+        .tab-button {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            white-space: nowrap;
+            background-color: #4b5563;
+            color: white;
+            border: none; }
+        .tab-button:hover {
+            background-color: #374151; }
+        .tab-button.active {
+            background-color: #2563eb;
+            color: white; }
+        .tab-button.active:hover {
+            background-color: #1d4ed8; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-white">NullMap Control Panel</h1>
+            <p class="text-gray-400">NullMap: Deceive Their Tools, Defend Your Network</p>
+        </header>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-1 card">
+                <h1 class="card-title">Engine Status
+                    <span id="jsRequirement" class="ml-2 text-xs font-medium flex items-center" style="display: none;">
+                        <span id="jsStatusIcon" class="inline-block w-3 h-3 rounded-full mr-1"></span>
+                        <span id="jsStatusText"></span>
+                    </span>
+                </h1>
+                <noscript>
+                    <div class="text-red-400 text-sm mb-4">
+                        JavaScript is required to operate the NullMap Control Panel. Please enable JavaScript in your browser.
+                    </div>
+                </noscript>
+                <div class="flex items-center justify-between mb-4">
+                    <span id="engineStatus" class="text-lg font-medium text-yellow-400">Inactive</span>
+                    <div id="statusIndicator" class="w-4 h-4 bg-yellow-400 rounded-full"></div>
+                </div>
+                <div>
+                    <label for="interfaceSelect" class="label">Network Interface:</label>
+                    <select id="interfaceSelect" class="select mb-4">
+                        <option value="">Loading interfaces...</option>
+                    </select>
+                    <div id="customInterfaceInputDiv" class="mt-2 hidden">
+                        <label for="customInterfaceName" class="label text-xs">Custom Interface Name:</label>
+                        <input type="text" id="customInterfaceName" class="input input-sm" placeholder="e.g., eth0 or wlan0">
+                    </div>
+                </div>
+                <button id="toggleEngineButton" class="button button-primary w-full">Start NullMap Engine</button>
+            </div>
+            <div class="md:col-span-2 card">
+                <h1 class="card-title">General Configuration</h1>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+                    <div>
+                        <label for="spoofedOSSelect" class="label">Spoofed OS Fingerprint:</label>
+                        <select id="spoofedOSSelect" class="select mb-2">
+                            <optgroup label="Linux">
+                                <option value="Linux 6.5.0-kali3-amd64">Linux 6.5.0-kali3-amd64 (Kali)</option>
+                                <option value="Linux 5.10.0-kali7-amd64">Linux 5.10.0-kali7-amd64 (Kali)</option>
+                                <option value="Linux 4.15.0-generic">Linux 4.15.0-generic (Ubuntu 18.04 LTS)</option>
+                                <option value="Linux 5.4.0-100-generic">Linux 5.4.0-100-generic (Ubuntu 20.04 LTS)</option>
+                                <option value="Linux 5.15.0-52-generic)">Linux 5.15.0-51-generic (Ubuntu 22.04 LTS)</option>
+                                <option value="Linux 3.10.0-1160.el7.x86_64">Linux 3.10.0-1160.el7.x86_64 (CentOS 7)</option>
+                                <option value="Linux 4.18.0-305.el8.x86_64">Linux 4.18.0-305.el8.x86_64 (RHEL 8)</option>
+                                <option value="Linux 5.10.0-amd64">Linux 5.10.0-amd64 (Debian 11 Bullseye)</option>
+                                <option value="Linux 5.15.0-amd64">Linux 5.15.0-amd64 (Debian 12 Bookworm)</option>
+                            </optgroup>
+                            <optgroup label="Windows">
+                                <option value="Windows 11 Pro">Windows 11 Pro</option>
+                                <option value="Windows 10 Pro (22H2)">Windows 10 Pro (22H2)</option>
+                                <option value="Windows 10 Home (21H1)">Windows 10 Home (21H1)</option>
+                                <option value="Windows 8.1 Pro">Windows 8.1 Pro</option>
+                                <option value="Windows 7 Professional SP1">Windows 7 Professional SP1</option>
+                                <option value="Windows XP Professional SP3">Windows XP Professional SP3</option>
+                                <option value="Windows Server 2022">Windows Server 2022</option>
+                                <option value="Windows Server 2019">Windows Server 2019</option>
+                                <option value="Windows Server 2016">Windows Server 2016</option>
+                                <option value="Windows Server 2012 R2">Windows Server 2012 R2</option>
+                                <option value="Windows Server 2008 R2">Windows Server 2008 R2</option>
+                            </optgroup>
+                            <optgroup label="macOS">
+                                <option value="macOS 14.0 Sonoma">macOS 14.0 Sonoma</option>
+                                <option value="macOS 13.0 Ventura">macOS 13.0 Ventura</option>
+                                <option value="macOS 12.0.1 Monterey">macOS 12.0.1 Monterey</option>
+                                <option value="macOS 10.15.7 Catalina">macOS 10.15.7 Catalina</option>
+                                <option value="macOS 10.13.6 High Sierra">macOS 10.13.6 High Sierra</option>
+                            </optgroup>
+                            <optgroup label="Network Devices / Embedded">
+                                <option value="Cisco IOS 15.6">Cisco IOS 15.6</option>
+                                <option value="Juniper Junos 21.4R1">Juniper Junos 21.4R1</option>
+                                <option value="FortiGate 7.0.5">FortiGate 7.0.5</option>
+                                <option value="MikroTik RouterOS 7.1.1">MikroTik RouterOS 7.1.1</option>
+                                <option value="VxWorks 6.9">VxWorks 6.9 (RTOS)</option>
+                                <option value="FreeRTOS 10.4.3">FreeRTOS 10.4.3 (IoT/Embedded)</option>
+                            </optgroup>
+                            <optgroup label="Other Unix/BSD">
+                                <option value="FreeBSD 13.1-RELEASE">FreeBSD 13.1-RELEASE</option>
+                                <option value="OpenBSD 7.0">OpenBSD 7.0</option>
+                                <option value="NetBSD 9.3">NetBSD 9.3</option>
+                                <option value="Solaris 11.4">Solaris 11.4</option>
+                            </optgroup>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <input type="text" id="customSpoofedOS" class="input hidden" placeholder="Enter custom OS fingerprint">
+                    </div>
+                    <div>
+                        <label class="label">Enable OS Spoofing:</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableOsSpoofing" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <label for="defaultPortAction" class="label">Default Port Action:</label>
+                        <select id="defaultPortAction" class="select">
+                            <option value="closed">Closed (RST/ACK)</option>
+                            <option value="open">Open (SYN/ACK)</option>
+                            <option value="filtered">Filtered (No Response)</option>
+                        </select>
+                        <p class="text-xs text-gray-400 mt-1">
+                            <span class="tooltip">Open<span class="info-icon">i</span><span class="tooltiptext">Simulates an open port.</span></span>,
+                            <span class="tooltip">Closed<span class="info-icon">i</span><span class="tooltiptext">Simulates a closed port.</span></span>,
+                            <span class="tooltip">Filtered<span class="info-icon">i</span><span class="tooltiptext">Simulates a filtered port.</span></span>
+                        </p>
+                    </div>
+                     <div>
+                        <label class="label">Configuration Management:</label>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <button id="saveConfigButton" class="button button-success text-sm py-2 px-3 w-full sm:w-auto">Save</button>
+                            <button id="loadConfigButton" class="button button-secondary text-sm py-2 px-3 w-full sm:w-auto">Load</button>
+                            <input type="file" id="configFileInput" class="hidden" accept=".json">
+                        </div>
+                         <p class="text-xs text-gray-500 mt-1">Save/load all settings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card" id="advancedSettingsCard">
+            <div class="flex justify-between items-center">
+                <h1 class="card-title" id="advancedSettingsTitle">Advanced Settings</h1>
+                <button id="toggleAdvancedSettingsButton" class="button button-secondary">
+                    <span id="toggleAdvancedSettingsText" class="ml-1">Hide</span>
+                </button>
+            </div>
+            <div id="collapsibleAdvancedSettingsContent">
+                <div class="border-b border-gray-700 mb-4">
+                    <nav class="-mb-px flex space-x-2 sm:space-x-3 overflow-x-auto" aria-label="Tabs">
+                        <button class="tab-button active" data-tab-id="services">Services</button>
+                        <button class="tab-button" data-tab-id="traceroute">Traceroute</button>
+                        <button class="tab-button" data-tab-id="evasion">Evasion</button>
+                        <button class="tab-button" data-tab-id="identity">Identity Spoofing</button>
+                        <button class="tab-button" data-tab-id="detection">Detection</button>
+                        <button class="tab-button" data-tab-id="honeypot">Honeypot</button>
+                    </nav>
+                </div>
+                <div id="servicesTab" class="tab-content">
+                    <h3 class="text-lg font-medium text-gray-200 mb-3">Service Banner Spoofing</h3>
+                     <div class="flex items-center space-x-2 mb-4">
+                        <label class="label whitespace-nowrap mb-0">Enable Service Spoofing:</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableServiceSpoofing" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-4 configured-services-container">
+                            <label class="label text-xs">Configured Service Rules:</label>
+                            <div id="serviceConfigContainer">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="label text-xs">Available Service Rules (Click to Add):</label>
+                            <div id="serviceRuleListContainer" class="service-rule-list">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tracerouteTab" class="tab-content hidden">
+                    <h3 class="text-lg font-medium text-gray-200 mb-3">Traceroute Spoofing</h3>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <label class="label whitespace-nowrap mb-0">Enable Traceroute Spoofing:</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="enableTracerouteSpoofing" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="space-y-3 mb-4" id="tracerouteHopsContainer">
+                        <div class="flex items-center space-x-2 p-2 bg-gray-700\/50 rounded-md traceroute-hop-row">
+                            <span class="text-gray-400">Hop 1:</span>
+                            <input type="text" placeholder="Spoofed IP/Hostname" class="input w-2/5 traceroute-ip-input" value="10.0.0.1">
+                            <input type="text" placeholder="Delay (ms)" class="input w-1/5 traceroute-delay-input" value="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            <button class="button button-danger text-xs p-2" onclick="this.closest('.traceroute-hop-row').remove(); updateTracerouteHopNumbers();">Remove</button>
+                        </div>
+                    </div>
+                    <button id="addTracerouteHop" class="button button-secondary text-sm">Add Hop</button>
+                </div>
+                <div id="evasionTab" class="tab-content hidden">
+                    <h3 class="text-lg font-medium text-gray-200 mb-3">Evasion Techniques</h3>
+                    <p class="text-sm text-gray-500 mb-4">Configure techniques to make detection harder. These apply when sending spoofed packets.</p>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium text-gray-200">Packet Fragmentation</span>
+                                    <p class="text-xs text-gray-400">Split larger packets into smaller IP fragments.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="enableFragmentation">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="fragmentationConfig" class="mt-3 hidden">
+                                <label for="fragmentationType" class="label text-xs">Fragmentation Type:</label>
+                                <select id="fragmentationType" class="select select-sm mb-2">
+                                    <option value="normal">Normal (Default MTU)</option>
+                                    <option value="custom">Custom Number of Fragments</option>
+                                </select>
+                                <input type="text" id="customFragments" class="input input-sm hidden" placeholder="Number of fragments (e.g., 2)" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-700\/50 rounded-md">
+                            <div>
+                                <span class="font-medium text-gray-200">Use Decoy Packets</span>
+                                <p class="text-xs text-gray-400">Send packets from spoofed decoy IPs alongside responses.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="enableDecoys">
+                                <span class="slider"></span>
+                                </label>
+                            </div>
+                         <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                               <div>
+                                    <span class="font-medium text-gray-200">Spoof Source IP for Evasion</span>
+                                    <p class="text-xs text-gray-400">Requires raw socket access. Used by decoys, advanced traceroute.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="enableSourceIpSpoofing">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="sourceIpSpoofingConfig" class="mt-3 hidden">
+                                 <label for="spoofedSourceIp" class="label text-xs">Spoofed Source IP:</label>
+                                 <input type="text" id="spoofedSourceIp" class="input input-sm" placeholder="e.g., 192.168.1.254">
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium text-gray-200">Randomized Response Delays</span>
+                                    <p class="text-xs text-gray-400">Introduce slight, random delays to responses.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="enableTimeManipulation">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="delayConfig" class="mt-3 hidden">
+                                <label for="delayType" class="label text-xs">Delay Type:</label>
+                                <select id="delayType" class="select select-sm mb-2">
+                                    <option value="random">Random (0-100ms)</option>
+                                    <option value="custom">Custom Range (ms)</option>
+                                </select>
+                                <div id="customDelayRange" class="flex items-center space-x-2 hidden">
+                                    <input type="text" id="minDelay" class="input input-sm w-1/2" placeholder="Min Delay" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                    <input type="text" id="maxDelay" class="input input-sm w-1/2" placeholder="Max Delay" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium text-gray-200">Use Bad Checksums (Fingerprinting)</span>
+                                    <p class="text-xs text-gray-400">Intentionally send packets with incorrect checksums.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="enableBadChecksums">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="checksumConfig" class="mt-3 hidden">
+                                <label for="checksumType" class="label text-xs">Checksum Type:</label>
+                                <select id="checksumType" class="select select-sm mb-2">
+                                    <option value="random">Randomly Corrupt</option>
+                                    <option value="custom">Custom Bad Checksum Value</option>
+                                </select>
+                                <input type="text" id="customChecksumValue" class="input input-sm hidden" placeholder="e.g., 0xDEAD">
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-md font-medium text-gray-200 mb-3">Packet Crafting & Traffic Morphing</h4>
+                            <div class="space-y-4">
+                                <div class="p-3 bg-gray-700\/50 rounded-md">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <span class="font-medium text-gray-200">Packet Splitting</span>
+                                            <p class="text-xs text-gray-400">Divide IP datagrams or TCP streams into non-overlapping fragments.</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="enablePacketSplitting">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div id="packetSplittingConfig" class="mt-3 hidden">
+                                        <label for="splitSize" class="label text-xs">Bytes per fragment:</label>
+                                        <input type="text" id="splitSize" class="input input-sm" placeholder="e.g., 8" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-gray-700\/50 rounded-md">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <span class="font-medium text-gray-200">Duplicate Insertion</span>
+                                            <p class="text-xs text-gray-400">Insert duplicate or overlapping segments to confuse IPS.</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="enableDuplicateInsertion">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div id="duplicateInsertionConfig" class="mt-3 hidden">
+                                        <label for="duplicateCount" class="label text-xs">Number of duplicate segments:</label>
+                                        <input type="text" id="duplicateCount" class="input input-sm" placeholder="e.g., 1" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-gray-700\/50 rounded-md">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <span class="font-medium text-gray-200">AI/ML Traffic Morphing (Conceptual)</span>
+                                            <p class="text-xs text-gray-400">Generate polymorphic traffic packets to bypass signature-based IDS.</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="enableAIMorphing">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div id="aiMorphingConfig" class="mt-3 hidden">
+                                        <label for="morphingProfile" class="label text-xs">Morphing Profile:</label>
+                                        <select id="morphingProfile" class="select select-sm mb-2">
+                                            <option value="web_browser">Web Browser</option>
+                                            <option value="iot_device">IoT Device</option>
+                                            <option value="generic_os">Generic OS</option>
+                                            <option value="custom">Custom Signature</option>
+                                        </select>
+                                        <input type="text" id="customMorphingSignature" class="input input-sm hidden" placeholder="Enter custom signature">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-md font-medium text-gray-200 mb-3">TLS/SSL Fingerprint Evasion</h4>
+                            <div class="space-y-4">
+                                <div class="p-3 bg-gray-700\/50 rounded-md">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <span class="font-medium text-gray-200">Enable TLS Fingerprint Spoofing</span>
+                                            <p class="text-xs text-gray-400">Dynamically modify TLS handshake characteristics.</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="enableTlsSpoofing">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    <div id="tlsSpoofingConfig" class="mt-3 hidden">
+                                        <label for="spoofTlsFingerprint" class="label text-xs">Spoof JA3/JA4 Fingerprint:</label>
+                                        <select id="spoofTlsFingerprint" class="select select-sm mb-2">
+                                            <option value="none">None</option>
+                                            <option value="chrome_windows">Chrome on Windows</option>
+                                            <option value="firefox_linux">Firefox on Linux</option>
+                                            <option value="curl">curl</option>
+                                            <option value="custom">Custom Fingerprint</option>
+                                        </select>
+                                        <input type="text" id="customTlsFingerprint" class="input input-sm hidden" placeholder="Enter custom JA3/JA4 string">
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-gray-700\/50 rounded-md">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <span class="font-medium text-gray-200">Randomize TLS Parameters</span>
+                                            <p class="text-xs text-gray-400">Introduce randomness in TLS handshake parameters.</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="randomizeTlsParams">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="identityTab" class="tab-content hidden">
+                    <h3 class="text-lg font-medium text-gray-200 mb-3">Identity Spoofing & Deception</h3>
+                    <p class="text-sm text-gray-500 mb-4">Actively deceive defensive fingerprinting mechanisms by manipulating packet attributes.</p>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium text-gray-200">Spoof TTL (Time-To-Live)</span>
+                                    <p class="text-xs text-gray-400">Set a custom TTL value to mimic a different OS or network hop count.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="spoofTTL">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="spoofTTLConfig" class="mt-3 hidden">
+                                <label for="customTTLValue" class="label text-xs">Custom TTL Value:</label>
+                                <input type="text" id="customTTLValue" class="input input-sm" placeholder="e.g., 64 (Linux), 128 (Windows)" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium text-gray-200">Manipulate TCP Window Size</span>
+                                    <p class="text-xs text-gray-400">Set a custom TCP window size to influence OS fingerprinting.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="manipulateWindowSize">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="windowSizeConfig" class="mt-3 hidden">
+                                <label for="customWindowSize" class="label text-xs">Custom Window Size:</label>
+                                <input type="text" id="customWindowSize" class="input input-sm" placeholder="e.g., 65535" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium text-gray-200">Custom TCP Flags</span>
+                                    <p class="text-xs text-gray-400">Set unusual TCP flags to evade detection or trigger specific responses.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="enableCustomTcpFlags">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="customTcpFlagsConfig" class="mt-3 hidden">
+                                <label for="customTcpFlags" class="label text-xs">Select Flags:</label>
+                                <select id="customTcpFlags" class="select select-sm mb-2" multiple>
+                                    <option value="SYN">SYN</option>
+                                    <option value="ACK">ACK</option>
+                                    <option value="RST">RST</option>
+                                    <option value="PSH">PSH</option>
+                                    <option value="URG">URG</option>
+                                    <option value="ECE">ECE</option>
+                                    <option value="CWR">CWR</option>
+                                    <option value="NS">NS</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <label for="ipIdSpoofing" class="label">IP ID Generation Spoofing:</label>
+                            <select id="ipIdSpoofing" class="select select-sm mb-2">
+                                <option value="none">None</option>
+                                <option value="random">Random</option>
+                                <option value="sequential">Sequential</option>
+                                <option value="zero">Zero</option>
+                                <option value="custom_pattern">Custom Pattern</option>
+                            </select>
+                            <input type="text" id="customIpIdPattern" class="input input-sm hidden" placeholder="Enter custom IP ID pattern (e.g., 0xABCD)">
+                            <p class="text-xs text-gray-400 mt-1">Manipulate IP Identification field for OS fingerprint evasion.</p>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-medium text-gray-200">Initial Sequence Number (ISN) Manipulation</span>
+                                    <p class="text-xs text-gray-400">Control the ISN to influence OS fingerprinting or bypass stateful firewalls.</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="manipulateISN">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div id="isnManipulationConfig" class="mt-3 hidden">
+                                <label for="isnPattern" class="label text-xs">ISN Pattern:</label>
+                                <select id="isnPattern" class="select select-sm mb-2">
+                                    <option value="random">Random</option>
+                                    <option value="predictable">Predictable Pattern</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h4 class="text-md font-medium text-gray-200 mb-3">Passive Fingerprinting Output (Conceptual)</h4>
+                            <div class="p-3 bg-gray-700\/50 rounded-md">
+                                <label for="passiveFingerprintOutput" class="label">NullMap's Passive Target Interpretation:</label>
+                                <textarea id="passiveFingerprintOutput" class="input w-full h-32" readonly placeholder="This area would display NullMap's interpretation of the target's OS/device based on passive analysis of network traffic (e.g., p0f-like output)."></textarea>
+                                <p class="text-xs text-gray-400 mt-1">Simulated output from passive analysis, showing what defensive tools might see.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="detectionTab" class="tab-content hidden">
+                    <h3 class="text-lg font-medium text-gray-200 mb-3">Scan Detection Configuration</h3>
+                    <p class="text-sm text-gray-500 mb-4">Configure parameters for detecting incoming Nmap scans. Alerts will appear in the "Scan Detection Alerts" panel.</p>
+                    <div class="space-y-4">
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <label for="detectionPortsThreshold" class="label">Port Scan: Min. Unique Ports Probed</label>
+                            <input type="text" id="detectionPortsThreshold" class="input input-sm w-1/3" value="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            <p class="text-xs text-gray-400 mt-1">Number of unique ports probed from a single IP to trigger an alert.</p>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <label for="detectionSynsThreshold" class="label">Port Scan: Min. SYN Packets</label>
+                            <input type="text" id="detectionSynsThreshold" class="input input-sm w-1/3" value="5" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            <p class="text-xs text-gray-400 mt-1">Number of SYN packets to distinct ports from a single IP.</p>
+                        </div>
+                        <div class="p-3 bg-gray-700\/50 rounded-md">
+                            <label for="detectionTimeWindow" class="label">Port Scan: Time Window (seconds)</label>
+                            <input type="text" id="detectionTimeWindow" class="input input-sm w-1/3" value="60" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                            <p class="text-xs text-gray-400 mt-1">Time window in which the above thresholds must be met.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="honeypotTab" class="tab-content hidden">
+                    <h3 class="text-lg font-medium text-gray-200 mb-3">Honeypot Configuration</h3>
+                    <p class="text-sm text-gray-500 mb-4">
+                        Enable honeypots for specific services configured in the "Services" tab.
+                        A honeypot will simulate the behavior of the chosen service, capturing interactions
+                        from attackers and logging them. (Conceptual: Actual honeypot deployment
+                        would require backend integration.)
+                    </p>
+                    <div class="space-y-4">
+                        <p class="text-gray-400">
+                            Honeypot functionality is integrated directly into each service rule in the "Services" tab.
+                            Toggle the "Honeypot" switch next to each service to enable it.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card">
+                <h1 class="card-title">Activity Log</h1>
+                <div id="logOutput" class="log-area">
+                </div>
+            </div>
+            <div class="card">
+                <h1 class="card-title">Scan Detection Alerts</h1>
+                <div id="alertsOutput" class="log-area text-yellow-400">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let engineActive = false;
+        const getEl = (id) => document.getElementById(id);
+        const querySel = (selector) => document.querySelector(selector);
+        const querySelAll = (selector) => document.querySelectorAll(selector);
+        const tabs = Array.from(querySelAll('.tab-button'));
+        const tabContents = Array.from(querySelAll('.tab-content'));
+        const logOutputEl = getEl('logOutput');
+        const alertsOutputEl = getEl('alertsOutput');
+        const interfaceSelect = getEl('interfaceSelect');
+        const customInterfaceInputDiv = getEl('customInterfaceInputDiv');
+        const customInterfaceNameInput = getEl('customInterfaceName');
+        const toggleEngineBtn = getEl('toggleEngineButton');
+        const engineStatusEl = getEl('engineStatus');
+        const statusIndicatorEl = getEl('statusIndicator');
+        const spoofedOSSelect = getEl('spoofedOSSelect');
+        const customSpoofedOSInput = getEl('customSpoofedOS');
+        const enableOsSpoofingToggle = getEl('enableOsSpoofing');
+        const defaultPortActionSelect = getEl('defaultPortAction');
+        const enableServiceSpoofingToggle = getEl('enableServiceSpoofing');
+        const serviceConfigContainer = getEl('serviceConfigContainer');
+        const serviceRuleListContainer = getEl('serviceRuleListContainer');
+        const enableTracerouteSpoofingToggle = getEl('enableTracerouteSpoofing');
+        const tracerouteHopsContainer = getEl('tracerouteHopsContainer');
+        const addTracerouteHopBtn = getEl('addTracerouteHop');
+        const evasionToggles = {
+            enableFragmentation: { toggle: getEl('enableFragmentation'), configDiv: getEl('fragmentationConfig'), typeSelect: getEl('fragmentationType'), customInput: getEl('customFragments') },
+            enableDecoys: { toggle: getEl('enableDecoys') },
+            enableSourceIpSpoofing: { toggle: getEl('enableSourceIpSpoofing'), configDiv: getEl('sourceIpSpoofingConfig'), customInput: getEl('spoofedSourceIp') },
+            enableTimeManipulation: { toggle: getEl('enableTimeManipulation'), configDiv: getEl('delayConfig'), typeSelect: getEl('delayType'), customRangeDiv: getEl('customDelayRange'), minInput: getEl('minDelay'), maxInput: getEl('maxDelay') },
+            enableBadChecksums: { toggle: getEl('enableBadChecksums'), configDiv: getEl('checksumConfig'), typeSelect: getEl('checksumType'), customInput: getEl('customChecksumValue') },
+            enablePacketSplitting: { toggle: getEl('enablePacketSplitting'), configDiv: getEl('packetSplittingConfig'), customInput: getEl('splitSize') },
+            enableDuplicateInsertion: { toggle: getEl('enableDuplicateInsertion'), configDiv: getEl('duplicateInsertionConfig'), customInput: getEl('duplicateCount') },
+            enableAIMorphing: { toggle: getEl('enableAIMorphing'), configDiv: getEl('aiMorphingConfig'), typeSelect: getEl('morphingProfile'), customInput: getEl('customMorphingSignature') },
+            enableTlsSpoofing: { toggle: getEl('enableTlsSpoofing'), configDiv: getEl('tlsSpoofingConfig'), typeSelect: getEl('spoofTlsFingerprint'), customInput: getEl('customTlsFingerprint') },
+            randomizeTlsParams: { toggle: getEl('randomizeTlsParams') }};
+        const identityToggles = {
+            spoofTTL: { toggle: getEl('spoofTTL'), configDiv: getEl('spoofTTLConfig'), customInput: getEl('customTTLValue') },
+            manipulateWindowSize: { toggle: getEl('manipulateWindowSize'), configDiv: getEl('windowSizeConfig'), customInput: getEl('customWindowSize') },
+            enableCustomTcpFlags: { toggle: getEl('enableCustomTcpFlags'), configDiv: getEl('customTcpFlagsConfig') },
+            manipulateISN: { toggle: getEl('manipulateISN'), configDiv: getEl('isnManipulationConfig'), typeSelect: getEl('isnPattern') }};
+        const customTcpFlagsSelect = getEl('customTcpFlags');
+        const ipIdSpoofingSelect = getEl('ipIdSpoofing');
+        const customIpIdPatternInput = getEl('customIpIdPattern');
+        const passiveFingerprintOutput = getEl('passiveFingerprintOutput');
+        const detectionPortsThresholdInput = getEl('detectionPortsThreshold');
+        const detectionSynsThresholdInput = getEl('detectionSynsThreshold');
+        const detectionTimeWindowInput = getEl('detectionTimeWindow');
+        const saveConfigButton = getEl('saveConfigButton');
+        const loadConfigButton = getEl('loadConfigButton');
+        const configFileImportInput = getEl('configFileInput');
+        const toggleAdvancedSettingsButton = getEl('toggleAdvancedSettingsButton');
+        const collapsibleAdvancedSettingsContent = getEl('collapsibleAdvancedSettingsContent');
+        const toggleAdvancedSettingsText = getEl('toggleAdvancedSettingsText');
+        const toggleIconOpen = getEl('toggleIconOpen');
+        const toggleIconClosed = getEl('toggleIconClosed');
+        const predefinedServices = {
+            "Custom Service": { port: "", versions: [] },
+            "Apache HTTP Server": { port: 80, versions: [{ value: "Apache/2.4.53 (Ubuntu)", display: "Apache/2.4.53 (Ubuntu)" }, { value: "Apache/2.2.34 (CentOS)", display: "Apache/2.2.34 (CentOS)" }, { value: "Apache/1.3.42 (Debian)", display: "Apache/1.3.42 (Debian) (Vulnerable: CVE-xxxx-xxxx)" }] },
+            "Nginx": { port: 80, versions: [{ value: "nginx/1.21.6", display: "nginx/1.21.6" }, { value: "nginx/1.18.0 (Ubuntu)", display: "nginx/1.18.0 (Ubuntu)" }, { value: "nginx/1.10.3", display: "nginx/1.10.3 (Vulnerable: CVE-2017-7529)" }] },
+            "Microsoft IIS": { port: 80, versions: [{ value: "Microsoft-IIS/10.0", display: "Microsoft-IIS/10.0" }, { value: "Microsoft-IIS/7.5", display: "Microsoft-IIS/7.5 (Vulnerable: CVE-2017-7269)" }, { value: "Microsoft-IIS/6.0", display: "Microsoft-IIS/6.0 (Vulnerable: MS15-034)" }] },
+            "OpenSSH": { port: 22, versions: [{ value: "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3", display: "SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3" }, { value: "SSH-2.0-OpenSSH_7.4p1 Debian-10+deb9u7", display: "SSH-2.0-OpenSSH_7.4p1 Debian-10+deb9u7" }, { value: "SSH-2.0-OpenSSH_6.6.1p1", display: "SSH-2.0-OpenSSH_6.6.1p1 (Vulnerable: CVE-2016-10009)" }] },
+            "vsftpd": { port: 21, versions: [{ value: "2.3.4", display: "2.3.4 (Vulnerable: Backdoor CVE-2011-2523)" }, { value: "3.0.3", display: "3.0.3" }, { value: "2.0.5", display: "2.0.5" }] },
+            "ProFTPD": { port: 21, versions: [{ value: "ProFTPD 1.3.5", display: "ProFTPD 1.3.5" }, { value: "ProFTPD 1.3.3c", display: "ProFTPD 1.3.3c (Vulnerable: CVE-2015-3306)" }, { value: "ProFTPD 1.3.2a", display: "ProFTPD 1.3.2a" }] },
+            "Postfix SMTP": { port: 25, versions: [{ value: "Postfix", display: "Postfix" }, { value: "Postfix (Ubuntu)", display: "Postfix (Ubuntu)" }, { value: "Postfix (Debian)", display: "Postfix (Debian)" }] },
+            "BIND DNS": { port: 53, versions: [{ value: "ISC BIND 9.11.5-P4", display: "ISC BIND 9.11.5-P4" }, { value: "ISC BIND 9.10.3-P4", display: "ISC BIND 9.10.3-P4 (Vulnerable: CVE-2016-2776)" }, { value: "ISC BIND 9.9.5-P1", display: "ISC BIND 9.9.5-P1" }] },
+            "MySQL": { port: 3306, versions: [{ value: "MySQL 8.0.30", display: "MySQL 8.0.30" }, { value: "MySQL 5.7.40", display: "MySQL 5.7.40" }, { value: "MySQL 5.5.62", display: "MySQL 5.5.62 (EOL)" }] },
+            "PostgreSQL": { port: 5432, versions: [{ value: "PostgreSQL 15.2", display: "PostgreSQL 15.2" }, { value: "PostgreSQL 12.14", display: "PostgreSQL 12.14" }] },
+            "Microsoft SQL Server": { port: 1433, versions: [{ value: "Microsoft SQL Server 2019", display: "Microsoft SQL Server 2019" }, { value: "Microsoft SQL Server 2016", display: "Microsoft SQL Server 2016" }] },
+            "MongoDB": { port: 27017, versions: [{ value: "MongoDB 6.0.5", display: "MongoDB 6.0.5" }, { value: "MongoDB 4.4.19", display: "MongoDB 4.4.19" }] },
+            "Redis": { port: 6379, versions: [{ value: "Redis 7.0.9", display: "Redis 7.0.9" }, { value: "Redis 5.0.14", display: "Redis 5.0.14" }] },
+            "Apache Tomcat": { port: 8080, versions: [{ value: "Apache Tomcat/10.1.7", display: "Apache Tomcat/10.1.7" }, { value: "Apache Tomcat/9.0.73", display: "Apache Tomcat/9.0.73" }, { value: "Apache Tomcat/7.0.109", display: "Apache Tomcat/7.0.109 (Vulnerable: CVE-2020-1938)" }] },
+            "JBoss EAP": { port: 8080, versions: [{ value: "JBoss EAP 7.4.0", display: "JBoss EAP 7.4.0" }, { value: "JBoss EAP 6.4.0", display: "JBoss EAP 6.4.0 (Vulnerable: CVE-2017-12149)" }] },
+            "Jenkins": { port: 8080, versions: [{ value: "Jenkins 2.387.1", display: "Jenkins 2.387.1" }, { value: "Jenkins 2.346.3", display: "Jenkins 2.346.3 (Vulnerable: CVE-2022-34179)" }] },
+            "ActiveMQ": { port: 61616, versions: [{ value: "Apache ActiveMQ 5.17.2", display: "Apache ActiveMQ 5.17.2" }, { value: "Apache ActiveMQ 5.15.15", display: "Apache ActiveMQ 5.15.15 (Vulnerable: CVE-2023-46604)" }] },
+            "RabbitMQ": { port: 5672, versions: [{ value: "RabbitMQ 3.11.16", display: "RabbitMQ 3.11.16" }, { value: "RabbitMQ 3.9.29", display: "RabbitMQ 3.9.29" }] },
+            "Elasticsearch": { port: 9200, versions: [{ value: "Elasticsearch 8.7.0", display: "Elasticsearch 8.7.0" }, { value: "Elasticsearch 7.17.9", display: "Elasticsearch 7.17.9" }] },
+            "Kibana": { port: 5601, versions: [{ value: "Kibana 8.7.0", display: "Kibana 8.7.0" }, { value: "Kibana 7.17.9", display: "Kibana 7.17.9" }] },
+            "Logstash": { port: 9600, versions: [{ value: "Logstash 8.7.0", display: "Logstash 8.7.0" }, { value: "Logstash 7.17.9", display: "Logstash 7.17.9" }] },
+            "Docker Daemon": { port: 2375, versions: [{ value: "Docker Engine 24.0.5", display: "Docker Engine 24.0.5" }, { value: "Docker Engine 20.10.24", display: "Docker Engine 20.10.24" }] },
+            "Kubernetes API Server": { port: 6443, versions: [{ value: "Kubernetes v1.27.3", display: "Kubernetes v1.27.3" }, { value: "Kubernetes v1.24.10", display: "Kubernetes v1.24.10" }] },
+            "NTP": { port: 123, versions: [{ value: "NTPD 4.2.8p15", display: "NTPD 4.2.8p15" }, { value: "Chrony 4.2", display: "Chrony 4.2" }] },
+            "SNMP": { port: 161, versions: [{ value: "SNMPv2c", display: "SNMPv2c" }, { value: "Net-SNMP 5.9.1", display: "Net-SNMP 5.9.1" }] },
+            "RDP": { port: 3389, versions: [{ value: "Microsoft Terminal Services", display: "Microsoft Terminal Services" }] },
+            "VNC": { port: 5900, versions: [{ value: "RealVNC 7.0.1", display: "RealVNC 7.0.1" }, { value: "TightVNC 2.8.6", display: "TightVNC 2.8.6" }] },
+            "SIP": { port: 5060, versions: [{ value: "Asterisk 18.10.0", display: "Asterisk 18.10.0" }, { value: "FreeSWITCH 1.10.9", display: "FreeSWITCH 1.10.9" }] }
+        };
+        function addLog(message, type = "INFO") {
+            let typeColor = "text-cyan-400";
+            if (type === "SYSTEM") typeColor = "text-blue-400";
+            else if (type === "SPOOF") typeColor = "text-purple-400";
+            else if (type === "WARNING") typeColor = "text-yellow-400";
+            else if (type === "ERROR") typeColor = "text-red-400";
+            logOutputEl.innerHTML += `<div><span class="${typeColor}">[${type}]</span> ${new Date().toLocaleTimeString()}: ${message}</div>`;
+            logOutputEl.scrollTop = logOutputEl.scrollHeight;}
+        function addAlert(message) {
+            alertsOutputEl.innerHTML += `<div><span class="text-red-400">[ALERT]</span> ${new Date().toLocaleTimeString()}: ${message}</div>`;
+            alertsOutputEl.scrollTop = alertsOutputEl.scrollHeight;}
+        function showTab(tabId) {
+            tabs.forEach(tab => {
+                const currentTabId = tab.dataset.tabId;
+                tab.classList.toggle('active', currentTabId === tabId);});
+            tabContents.forEach(content => {
+                content.classList.toggle('hidden', content.id !== tabId + 'Tab');});}
+        function populateServiceRuleList() {
+            serviceRuleListContainer.innerHTML = '';
+            for (const key in predefinedServices) {
+                const listItem = document.createElement('div');
+                listItem.className = 'service-rule-list-item text-gray-300';
+                listItem.textContent = key;
+                listItem.dataset.serviceKey = key;
+                listItem.addEventListener('click', () => addServiceConfigRow(key));
+                serviceRuleListContainer.appendChild(listItem);}}
+        function addServiceConfigRow(serviceKey = "Custom Service", port = '', banner = '', serviceId = null, portState = 'open', honeypotEnabled = false) {
+            serviceId = serviceId || `service-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            let existingServiceRow = serviceConfigContainer.querySelector(`.service-row[data-service-id="${serviceId}"]`);
+            if (existingServiceRow) {
+                removeServiceConfigRow(serviceId);
+            }
+            const newRow = document.createElement('div');
+            newRow.className = 'service-row space-y-2 p-3 bg-gray-700\/50 rounded-md';
+            newRow.dataset.serviceId = serviceId;
+            const serviceData = predefinedServices[serviceKey];
+            let versionOptionsHTML = '';
+            let initialPort = port || serviceData.port || '';
+            let initialBanner = banner;
+            if (serviceData && serviceData.versions && serviceData.versions.length > 0) {
+                serviceData.versions.forEach((v, index) => {
+                    const isSelected = (initialBanner === v.value) || (!initialBanner && index === 0);
+                    versionOptionsHTML += `<option value="${v.value}" ${isSelected ? 'selected' : ''}>${v.display}</option>`;
+                });
+                versionOptionsHTML += `<option value="custom_banner" ${initialBanner && !serviceData.versions.find(v => v.value === initialBanner) ? 'selected' : ''}>Custom Banner</option>`;
+                if (!initialBanner) {
+                    initialBanner = serviceData.versions[0]?.value || '';
+                } else if (!serviceData.versions.find(v => v.value === initialBanner) && initialBanner !== "custom_banner") {
+                    initialBanner = banner;
+                }
+            } else {
+                versionOptionsHTML = '<option value="custom_banner" selected>Custom Banner</option>';
+                if (!initialBanner) {
+                    initialBanner = '';
+                }
+            }
+            newRow.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 items-end">
+                    <div>
+                        <label class="label text-xs">Service Type:</label>
+                        <select class="service-type-select select select-sm">
+                            ${Object.keys(predefinedServices).map(key => `<option value="${key}" ${key === serviceKey ? 'selected' : ''}>${key}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label text-xs">Port:</label>
+                        <input type="text" placeholder="Port" class="service-port-input input input-sm" value="${initialPort}" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    </div>
+                    <div>
+                        <label class="label text-xs">Port State:</label>
+                        <select class="service-port-state-select select select-sm">
+                            <option value="open" ${portState === 'open' ? 'selected' : ''}>Open</option>
+                            <option value="closed" ${portState === 'closed' ? 'selected' : ''}>Closed</option>
+                            <option value="filtered" ${portState === 'filtered' ? 'selected' : ''}>Filtered</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label text-xs">Honeypot:</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="service-honeypot-toggle" ${honeypotEnabled ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="label text-xs">Service Banner:</label>
+                        <select class="service-version-select select select-sm mb-1">${versionOptionsHTML}</select>
+                        <input type="text" placeholder="Custom banner (e.g., Apache/2.4.53)" class="service-banner-input input input-sm" value="${initialBanner}">
+                    </div>
+                    <div class="sm:col-span-2 flex justify-end space-x-2">
+                         <button class="button button-secondary text-xs p-2 mt-4 service-apply-button">Apply</button>
+                         <button class="button button-danger text-xs p-2 mt-4" onclick="removeServiceConfigRow(this.closest('.service-row').dataset.serviceId);">Remove</button>
+                    </div>
+                </div> `;
+            serviceConfigContainer.appendChild(newRow);
+            const serviceTypeSelect = newRow.querySelector('.service-type-select');
+            const versionSelect = newRow.querySelector('.service-version-select');
+            const bannerInput = newRow.querySelector('.service-banner-input');
+            const portInput = newRow.querySelector('.service-port-input');
+            const servicePortStateSelect = newRow.querySelector('.service-port-state-select');
+            const serviceHoneypotToggle = newRow.querySelector('.service-honeypot-toggle');
+            const applyButton = newRow.querySelector('.service-apply-button');
+            const updateBannerInputVisibility = () => {
+                if (versionSelect.value === "custom_banner") {
+                    bannerInput.classList.remove('hidden');
+                    bannerInput.value = (serviceData && serviceData.versions && serviceData.versions.length > 0 && versionSelect.selectedIndex !== serviceData.versions.length) ? versionSelect.value : '';
+                } else {
+                    bannerInput.classList.remove('hidden');
+                    bannerInput.value = versionSelect.value;
+                }
+            };
+            const updateServicePortConfig = () => {
+                const currentPort = parseInt(portInput.value);
+                if (isNaN(currentPort) || currentPort < 1 || currentPort > 65535) {
+                    addLog("Invalid port number for service. Please enter a value between 1 and 65535.", "ERROR");
+                    return;
+                }
+                const conflictRow = Array.from(serviceConfigContainer.querySelectorAll('.service-row')).find(row =>
+                    parseInt(row.querySelector('.service-port-input').value) === currentPort && row.dataset.serviceId !== serviceId
+                );
+                if (conflictRow) {
+                    addLog(`Port ${currentPort} is already configured by another service. Please choose a different port.`, "ERROR");
+                    portInput.value = '';
+                    return;
+                }
+                addLog(`Service banner and port state for port ${currentPort} applied.`, "SYSTEM");
+                checkOsBannerConsistency();
+            };
+            serviceTypeSelect.addEventListener('change', function() {
+                const selectedKey = this.value;
+                const newServiceData = predefinedServices[selectedKey];
+                portInput.value = newServiceData.port || '';
+                let newVersionOptions = '';
+                if (newServiceData.versions && newServiceData.versions.length > 0) {
+                    newServiceData.versions.forEach((v, index) => {
+                        const isSelected = index === 0;
+                        newVersionOptions += `<option value="${v.value}" ${isSelected ? 'selected' : ''}>${v.display}</option>`;
+                    });
+                    newVersionOptions += `<option value="custom_banner">Custom Banner</option>`;
+                    versionSelect.innerHTML = newVersionOptions;
+                    versionSelect.value = newServiceData.versions[0]?.value || '';
+                } else {
+                    newVersionOptions = '<option value="custom_banner" selected>Custom Banner</option>';
+                    versionSelect.innerHTML = newVersionOptions;
+                    versionSelect.value = 'custom_banner';
+                }
+                updateBannerInputVisibility();
+                checkOsBannerConsistency();
+            });
+            versionSelect.addEventListener('change', updateBannerInputVisibility);
+            bannerInput.addEventListener('input', () => {
+                if (versionSelect.value !== "custom_banner") {
+                    versionSelect.value = "custom_banner";
+                }
+                checkOsBannerConsistency();
+            });
+            applyButton.addEventListener('click', updateServicePortConfig);
+            if (port) {
+                updateServicePortConfig();
+            }
+            updateBannerInputVisibility();
+        }
+        function removeServiceConfigRow(serviceId) {
+            const serviceRow = serviceConfigContainer.querySelector(`.service-row[data-service-id="${serviceId}"]`);
+            if (serviceRow) {
+                serviceRow.remove();
+            }
+            addLog(`Service configuration for ID ${serviceId} removed.`, "SYSTEM");
+            checkOsBannerConsistency();
+        }
+        function updateTracerouteHopNumbers() {
+            const rows = tracerouteHopsContainer.querySelectorAll('.traceroute-hop-row');
+            rows.forEach((row, index) => {
+                const span = row.querySelector('span');
+                if (span) span.textContent = `Hop ${index + 1}:`;});}
+        function addTracerouteHopRow(ip = '', delay = '') {
+            const newRow = document.createElement('div');
+            newRow.className = 'flex items-center space-x-2 p-2 bg-gray-700\/50 rounded-md traceroute-hop-row';
+            const currentHops = tracerouteHopsContainer.children.length;
+            newRow.innerHTML = `
+                <span class="text-gray-400">Hop ${currentHops + 1}:</span>
+                <input type="text" placeholder="Spoofed IP/Hostname" class="input w-2/5 traceroute-ip-input" value="${ip}">
+                <input type="text" placeholder="Delay (ms)" class="input w-1/5 traceroute-delay-input" value="${delay}" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <button class="button button-danger text-xs p-2" onclick="this.closest('.traceroute-hop-row').remove(); updateTracerouteHopNumbers();">Remove</button>`;
+            tracerouteHopsContainer.appendChild(newRow);
+            updateTracerouteHopNumbers();}
+        function setupEventListeners() {
+            tabs.forEach(tab => tab.addEventListener('click', () => showTab(tab.dataset.tabId)));
+            toggleEngineBtn.addEventListener('click', toggleEngine);
+            interfaceSelect.addEventListener('change', handleInterfaceSelectChange);
+            spoofedOSSelect.addEventListener('change', handleSpoofedOSChange);
+            customSpoofedOSInput.addEventListener('input', checkOsBannerConsistency);
+            addTracerouteHopBtn.addEventListener('click', () => addTracerouteHopRow());
+            for (const key in evasionToggles) {
+                const item = evasionToggles[key];
+                item.toggle.addEventListener('change', () => {
+                    if (item.configDiv) item.configDiv.classList.toggle('hidden', !item.toggle.checked);});
+                if (item.typeSelect) {
+                    item.typeSelect.addEventListener('change', () => {
+                        if (item.customInput) item.customInput.classList.toggle('hidden', item.typeSelect.value !== 'custom' && item.typeSelect.value !== 'custom_pattern');
+                        if (item.customRangeDiv) item.customRangeDiv.classList.toggle('hidden', item.typeSelect.value !== 'custom');});}}
+            for (const key in identityToggles) {
+                const item = identityToggles[key];
+                item.toggle.addEventListener('change', () => {
+                    if (item.configDiv) item.configDiv.classList.toggle('hidden', !item.toggle.checked);});
+                if (item.typeSelect) {
+                     item.typeSelect.addEventListener('change', () => {});}}
+            ipIdSpoofingSelect.addEventListener('change', () => {
+                customIpIdPatternInput.classList.toggle('hidden', ipIdSpoofingSelect.value !== 'custom_pattern');});
+            saveConfigButton.addEventListener('click', saveConfiguration);
+            loadConfigButton.addEventListener('click', () => configFileImportInput.click());
+            configFileImportInput.addEventListener('change', loadConfiguration);
+            toggleAdvancedSettingsButton.addEventListener('click', () => {
+                const isHidden = collapsibleAdvancedSettingsContent.classList.toggle('hidden');
+                toggleAdvancedSettingsText.textContent = isHidden ? 'Show' : 'Hide';
+                const logAreas = querySelAll('.log-area');
+                logAreas.forEach(area => {
+                    if(isHidden) {
+                        area.style.height = (area.offsetHeight + 200) + 'px';
+                    } else {
+                         area.style.height = '200px';}});});}
+        function toggleEngine() {
+            engineActive = !engineActive;
+            const ifaceValue = interfaceSelect.value === 'custom' ? customInterfaceNameInput.value.trim() : interfaceSelect.value;
+            if (engineActive) {
+                if (!ifaceValue) {
+                    addLog("Please select or specify a network interface before starting.", "ERROR");
+                    engineActive = false;
+                    return;}
+                toggleEngineBtn.textContent = 'Stop NullMap Engine';
+                toggleEngineBtn.classList.replace('button-primary', 'button-danger');
+                engineStatusEl.textContent = 'Active';
+                engineStatusEl.className = 'text-lg font-medium text-green-400';
+                statusIndicatorEl.className = 'w-4 h-4 bg-green-400 rounded-full animate-pulse';
+                addLog(`NullMap engine STARTED on interface: ${ifaceValue}.`, "SYSTEM");
+                checkOsBannerConsistency();
+            } else {
+                toggleEngineBtn.textContent = 'Start NullMap Engine';
+                toggleEngineBtn.classList.replace('button-danger', 'button-primary');
+                engineStatusEl.textContent = 'Inactive';
+                engineStatusEl.className = 'text-lg font-medium text-yellow-400';
+                statusIndicatorEl.className = 'w-4 h-4 bg-yellow-400 rounded-full';
+                addLog("NullMap engine STOPPED.", "SYSTEM");
+                const existingAlert = getEl('osBannerConsistencyAlert');
+                if (existingAlert) existingAlert.remove();}}
+        async function loadInterfaces() {
+            interfaceSelect.innerHTML = '<option value="">Loading interfaces...</option>';
+            customInterfaceInputDiv.classList.add('hidden');
+            try {
+                const interfaces = await new Promise((resolve) => setTimeout(() => {
+                    resolve([
+                        { name: "lo", ip: "127.0.0.1", description: "Loopback(SIMULATED)" }]);}, 1000));
+                interfaceSelect.innerHTML = '';
+                if (interfaces.length > 0) {
+                    interfaces.forEach(iface => {
+                        const option = document.createElement('option');
+                        option.value = iface.name;
+                        option.textContent = `${iface.name} (${iface.ip || 'N/A'}) - ${iface.description || 'No description'}`;
+                        interfaceSelect.appendChild(option);});
+                    addLog("Network interfaces loaded (simulated).", "SYSTEM");
+                } else {
+                    interfaceSelect.innerHTML = '<option value="">No interfaces found</option>';
+                    addLog("No network interfaces found (simulated). Please specify a custom interface if needed.", "WARNING");}
+                const customOption = document.createElement('option');
+                customOption.value = 'custom';
+                customOption.textContent = 'Custom Interface';
+                interfaceSelect.appendChild(customOption);
+            } catch (error) {
+                addLog(`Error fetching network interfaces: ${error.message}`, "ERROR");
+                interfaceSelect.innerHTML = '<option value="">Error loading interfaces</option><option value="custom">Custom Interface</option>';
+                customInterfaceInputDiv.classList.remove('hidden');
+            } finally {
+                handleInterfaceSelectChange();}}
+        function handleInterfaceSelectChange() {
+            customInterfaceInputDiv.classList.toggle('hidden', interfaceSelect.value !== 'custom');
+            if (interfaceSelect.value !== 'custom') {
+                customInterfaceNameInput.value = '';}}
+        function handleSpoofedOSChange() {
+            customSpoofedOSInput.classList.toggle('hidden', spoofedOSSelect.value !== 'custom');
+            if (spoofedOSSelect.value !== 'custom') {
+                customSpoofedOSInput.value = '';}
+            checkOsBannerConsistency();}
+        function checkOsBannerConsistency() {
+            if (!engineActive && !enableOsSpoofingToggle.checked && !enableServiceSpoofingToggle.checked) {
+                 const existingAlert = getEl('osBannerConsistencyAlert');
+                 if (existingAlert) existingAlert.remove();
+                 return; }
+            const currentSpoofedOS = spoofedOSSelect.value === 'custom' ? customSpoofedOSInput.value.toLowerCase() : spoofedOSSelect.value.toLowerCase();
+            const serviceRows = querySelAll('#serviceConfigContainer .service-row');
+            let inconsistencyDetected = false;
+            let inconsistentServicesMessages = [];
+            serviceRows.forEach(row => {
+                const serviceTypeSelect = row.querySelector('.service-type-select');
+                const serviceBannerInput = row.querySelector('.service-banner-input');
+                let selectedServiceType = serviceTypeSelect ? serviceTypeSelect.value.toLowerCase() : '';
+                let serviceBanner = serviceBannerInput.value.toLowerCase();
+                const isLinuxOS = currentSpoofedOS.includes('linux') || currentSpoofedOS.includes('ubuntu') || currentSpoofedOS.includes('centos') || currentSpoofedOS.includes('debian') || currentSpoofedOS.includes('kali');
+                const isWindowsOS = currentSpoofedOS.includes('windows');
+                const isIISService = selectedServiceType.includes('microsoft iis') || serviceBanner.includes('microsoft-iis');
+                if (isLinuxOS && isIISService) {
+                    inconsistencyDetected = true;
+                    inconsistentServicesMessages.push(`IIS banner ("${serviceBannerInput.value}") on a Linux-based OS ("${spoofedOSSelect.value === 'custom' ? customSpoofedOSInput.value : spoofedOSSelect.value}")`);}
+                const isApacheNginxService = selectedServiceType.includes('apache') || selectedServiceType.includes('nginx') || serviceBanner.includes('apache') || serviceBanner.includes('nginx');
+                if (isWindowsOS && isApacheNginxService) {
+                    inconsistencyDetected = true;
+                    inconsistentServicesMessages.push(`Apache/Nginx banner ("${serviceBannerInput.value}") on a Windows-based OS ("${spoofedOSSelect.value === 'custom' ? customSpoofedOSInput.value : spoofedOSSelect.value}")`);}});
+            const consistencyAlertId = 'osBannerConsistencyAlert';
+            let existingAlert = getEl(consistencyAlertId);
+            if (inconsistencyDetected) {
+                const message = `Potential OS/Service Inconsistency Detected. Issues: ${[...new Set(inconsistentServicesMessages)].join('; ')}. This might make fingerprinting easier.`;
+                if (!existingAlert) {
+                    existingAlert = document.createElement('div');
+                    existingAlert.id = consistencyAlertId;
+                    alertsOutputEl.insertBefore(existingAlert, alertsOutputEl.firstChild); }
+                existingAlert.innerHTML = `<span class="text-yellow-400">[WARNING]</span> ${new Date().toLocaleTimeString()}: ${message}`;
+                alertsOutputEl.scrollTop = 0;
+            } else {
+                if (existingAlert) {
+                    existingAlert.remove(); }}}
+        function collectConfiguration() {
+            const config = {
+                general: {
+                    interface: interfaceSelect.value,
+                    customInterface: customInterfaceNameInput.value,
+                    spoofedOS: spoofedOSSelect.value,
+                    customSpoofedOS: customSpoofedOSInput.value,
+                    enableOsSpoofing: enableOsSpoofingToggle.checked,
+                    defaultPortAction: defaultPortActionSelect.value,},
+                services: {
+                    enableServiceSpoofing: enableServiceSpoofingToggle.checked,
+                    rules: Array.from(querySelAll('#serviceConfigContainer .service-row')).map(row => ({
+                        id: row.dataset.serviceId,
+                        type: row.querySelector('.service-type-select').value,
+                        port: row.querySelector('.service-port-input').value,
+                        banner: row.querySelector('.service-banner-input').value,
+                        portState: row.querySelector('.service-port-state-select').value,
+                        honeypotEnabled: row.querySelector('.service-honeypot-toggle').checked,
+                    })),},
+                traceroute: {
+                    enableTracerouteSpoofing: enableTracerouteSpoofingToggle.checked,
+                    hops: Array.from(querySelAll('#tracerouteHopsContainer .traceroute-hop-row')).map(row => ({
+                        ip: row.querySelector('.traceroute-ip-input').value,
+                        delay: row.querySelector('.traceroute-delay-input').value,})),},
+                evasion: {},
+                identity: {
+                    customTcpFlags: Array.from(customTcpFlagsSelect.selectedOptions).map(opt => opt.value),
+                    ipIdSpoofing: ipIdSpoofingSelect.value,
+                    customIpIdPattern: customIpIdPatternInput.value,},
+                detection: {
+                    portsThreshold: detectionPortsThresholdInput.value,
+                    synsThreshold: detectionSynsThresholdInput.value,
+                    timeWindow: detectionTimeWindowInput.value,},
+                advancedSettingsCollapsed: collapsibleAdvancedSettingsContent.classList.contains('hidden')};
+            for (const key in evasionToggles) {
+                const item = evasionToggles[key];
+                config.evasion[key] = { checked: item.toggle.checked };
+                if (item.customInput) config.evasion[key].customValue = item.customInput.value;
+                if (item.typeSelect) config.evasion[key].typeValue = item.typeSelect.value;
+                if (item.minInput) config.evasion[key].minValue = item.minInput.value;
+                if (item.maxInput) config.evasion[key].maxValue = item.maxInput.value;}
+            for (const key in identityToggles) {
+                const item = identityToggles[key];
+                config.identity[key] = { checked: item.toggle.checked };
+                if (item.customInput) config.identity[key].customValue = item.customInput.value;
+                if (item.typeSelect) config.identity[key].typeValue = item.typeSelect.value;}
+            return config;}
+        function applyConfiguration(config) {
+            try {
+                if (config.general) {
+                    interfaceSelect.value = config.general.interface || '';
+                    customInterfaceNameInput.value = config.general.customInterface || '';
+                    handleInterfaceSelectChange();
+                    spoofedOSSelect.value = config.general.spoofedOS || 'Linux 5.10.0-kali7-amd64';
+                    customSpoofedOSInput.value = config.general.customSpoofedOS || '';
+                    handleSpoofedOSChange();
+                    enableOsSpoofingToggle.checked = config.general.enableOsSpoofing === true;
+                    defaultPortActionSelect.value = config.general.defaultPortAction || 'closed';}
+                if (config.services) {
+                    enableServiceSpoofingToggle.checked = config.services.enableServiceSpoofing === true;
+                    serviceConfigContainer.innerHTML = '';
+                    if (Array.isArray(config.services.rules)) {
+                        config.services.rules.forEach(s => addServiceConfigRow(s.type, s.port, s.banner, s.id, s.portState, s.honeypotEnabled));}}
+                if (config.traceroute) {
+                    enableTracerouteSpoofingToggle.checked = config.traceroute.enableTracerouteSpoofing === true;
+                    tracerouteHopsContainer.innerHTML = '';
+                    if (Array.isArray(config.traceroute.hops)) {
+                        config.traceroute.hops.forEach(h => addTracerouteHopRow(h.ip, h.delay));}}
+                if (config.evasion) {
+                    for (const key in evasionToggles) {
+                        if (config.evasion[key]) {
+                            const item = evasionToggles[key];
+                            const savedItem = config.evasion[key];
+                            item.toggle.checked = savedItem.checked === true;
+                            if (item.customInput && savedItem.customValue !== undefined) item.customInput.value = savedItem.customValue;
+                            if (item.typeSelect && savedItem.typeValue !== undefined) item.typeSelect.value = savedItem.typeValue;
+                            if (item.minInput && savedItem.minValue !== undefined) item.minInput.value = savedItem.minValue;
+                            if (item.maxInput && savedItem.maxValue !== undefined) item.maxInput.value = savedItem.maxValue;
+                            item.toggle.dispatchEvent(new Event('change'));
+                            if (item.typeSelect) item.typeSelect.dispatchEvent(new Event('change'));}}}
+                if (config.identity) {
+                    for (const key in identityToggles) {
+                         if (config.identity[key]) {
+                            const item = identityToggles[key];
+                            const savedItem = config.identity[key];
+                            item.toggle.checked = savedItem.checked === true;
+                            if (item.customInput && savedItem.customValue !== undefined) item.customInput.value = savedItem.customValue;
+                            if (item.typeSelect && savedItem.typeValue !== undefined) item.typeSelect.value = savedItem.typeValue;
+                            item.toggle.dispatchEvent(new Event('change')); }}
+                    if (config.identity.enableCustomTcpFlags && config.identity.enableCustomTcpFlags.checked === true) {
+                        getEl('enableCustomTcpFlags').checked = true;
+                        getEl('customTcpFlagsConfig').classList.remove('hidden');
+                    } else {
+                        getEl('enableCustomTcpFlags').checked = false;
+                        getEl('customTcpFlagsConfig').classList.add('hidden');
+                    }
+                    if (Array.isArray(config.identity.customTcpFlags)) {
+                        Array.from(customTcpFlagsSelect.options).forEach(opt => {
+                            opt.selected = config.identity.customTcpFlags.includes(opt.value);});}
+                    ipIdSpoofingSelect.value = config.identity.ipIdSpoofing || 'none';
+                    customIpIdPatternInput.value = config.identity.customIpIdPattern || '';
+                    ipIdSpoofingSelect.dispatchEvent(new Event('change')); }
+                if (config.detection) {
+                    detectionPortsThresholdInput.value = config.detection.portsThreshold || '10';
+                    detectionSynsThresholdInput.value = config.detection.synsThreshold || '5';
+                    detectionTimeWindowInput.value = config.detection.timeWindow || '60';}
+                if (config.advancedSettingsCollapsed === true) {
+                    collapsibleAdvancedSettingsContent.classList.add('hidden');
+                    toggleAdvancedSettingsText.textContent = 'Show';
+                } else {
+                    collapsibleAdvancedSettingsContent.classList.remove('hidden');
+                    toggleAdvancedSettingsText.textContent = 'Hide';}
+                checkOsBannerConsistency();
+                addLog("Configuration loaded successfully.", "SYSTEM");
+            } catch (error) {
+                addLog(`Error applying configuration: ${error.message}`, "ERROR");
+                console.error("Error applying configuration:", error);}}
+        function saveConfiguration() {
+            const config = collectConfiguration();
+            const configString = JSON.stringify(config, null, 2);
+            const blob = new Blob([configString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `nullmap_config.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            addLog("Configuration saved to file.", "SYSTEM");}
+        function loadConfiguration(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                addLog("No file selected for loading.", "WARNING");
+                return;}
+            if (file.type !== "application/json") {
+                addLog("Invalid file type. Please select a .json configuration file.", "ERROR");
+                event.target.value = null;
+                return;}
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const config = JSON.parse(e.target.result);
+                    applyConfiguration(config);
+                } catch (error) {
+                    addLog(`Error parsing configuration file: ${error.message}`, "ERROR");
+                    console.error("Error parsing JSON:", error);
+                } finally {
+                     event.target.value = null; }};
+            reader.onerror = () => {
+                addLog(`Error reading file: ${reader.error}`, "ERROR");
+                event.target.value = null; };
+            reader.readAsText(file);}
+        document.addEventListener('DOMContentLoaded', () => {
+            showTab('services');
+            populateServiceRuleList();
+            setupEventListeners();
+            loadInterfaces();
+            addLog("NullMap GUI Initialized. Ready for action.", "SYSTEM");
+            if (tracerouteHopsContainer.children.length === 0) {
+                addTracerouteHopRow('10.0.0.1', '10');
+            }
+        });
+    </script>
+</body>
+</html>
